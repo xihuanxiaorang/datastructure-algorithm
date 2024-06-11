@@ -132,6 +132,11 @@ public class ArrayList<E> {
     return res;
   }
 
+  @SuppressWarnings("unchecked")
+  E elementData(int index) {
+    return (E) elementData[index];
+  }
+
   /**
    * 列表扩容
    */
@@ -146,10 +151,5 @@ public class ArrayList<E> {
     elementData = newArr;
     // 新数组容量设置为原数组容量的 extendRatio 倍
     capacity = newCapacity;
-  }
-
-  @SuppressWarnings("unchecked")
-  E elementData(int index) {
-    return (E) elementData[index];
   }
 }

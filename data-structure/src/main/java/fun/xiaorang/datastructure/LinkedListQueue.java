@@ -1,7 +1,5 @@
 package fun.xiaorang.datastructure;
 
-import java.util.NoSuchElementException;
-
 /**
  * @author xiaorang
  * @description <p style = " font-weight:bold ; "><p/>
@@ -80,7 +78,7 @@ public class LinkedListQueue<E> {
    */
   public E peek() {
     if (isEmpty()) {
-      throw new NoSuchElementException();
+      throw new IndexOutOfBoundsException();
     }
     return front.value;
   }
