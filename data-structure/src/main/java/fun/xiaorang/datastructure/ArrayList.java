@@ -7,11 +7,11 @@ package fun.xiaorang.datastructure;
  * @Copyright 博客：<a href="https://docs.xiaorang.fun">小让的糖果屋</a>  - show me the code
  * @date 2024/06/11 17:56
  */
-public class ArrayList {
+public class ArrayList<E> {
   /**
    * 每次列表扩大的倍数
    */
-  private final int extendRatio = 2;
+  private static final int EXTEND_RATIO = 2;
   /**
    * 列表容量
    */
@@ -19,14 +19,14 @@ public class ArrayList {
   /**
    * 数组（存储列表元素）
    */
-  private int[] arr;
+  private Object[] elementData;
   /**
    * 列表长度（当前元素数量）
    */
   private int size = 0;
 
   public ArrayList() {
-    arr = new int[capacity];
+    elementData = new Object[capacity];
   }
 
   /**
@@ -39,25 +39,16 @@ public class ArrayList {
   }
 
   /**
-   * 获取列表容量
-   *
-   * @return 列表容量
-   */
-  public int capacity() {
-    return capacity;
-  }
-
-  /**
    * 访问元素
    *
    * @param index 索引
    * @return 元素
    */
-  public int get(int index) {
+  public E get(int index) {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException("索引越界");
     }
-    return arr[index];
+    return elementData(index);
   }
 
   /**
@@ -66,11 +57,11 @@ public class ArrayList {
    * @param index   索引
    * @param element 元素
    */
-  public void set(int index, int element) {
+  public void set(int index, E element) {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException("索引越界");
     }
-    arr[index] = element;
+    elementData[index] = element;
   }
 
   /**
@@ -78,12 +69,12 @@ public class ArrayList {
    *
    * @param element 元素
    */
-  public void add(int element) {
+  public void add(E element) {
     // 元素数量超出容量时，触发扩容机制
     if (size == capacity) {
       extendCapacity();
     }
-    arr[size++] = element;
+    elementData[size++] = element;
   }
 
   /**
@@ -92,7 +83,7 @@ public class ArrayList {
    * @param index   索引
    * @param element 元素
    */
-  public void insert(int index, int element) {
+  public void insert(int index, E element) {
     if (index < 0 || index > size) {
       throw new IndexOutOfBoundsException("索引越界");
     }
@@ -101,9 +92,9 @@ public class ArrayList {
       extendCapacity();
     }
     // 列表中的元素整体向后移动一位
-    System.arraycopy(arr, index, arr, index + 1, size - index);
+    System.arraycopy(elementData, index, elementData, index + 1, size - index);
     // 插入新元素
-    arr[index] = element;
+    elementData[index] = element;
     // 列表长度加 1
     size++;
   }
@@ -114,14 +105,14 @@ public class ArrayList {
    * @param index 索引
    * @return 被删除的元素
    */
-  public int remove(int index) {
+  public E remove(int index) {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException("索引越界");
     }
     // 记录被删除的元素
-    int num = arr[index];
+    E num = elementData(index);
     // 列表中的元素整体向前移动一位
-    System.arraycopy(arr, index + 1, arr, index, size - index - 1);
+    System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
     // 列表长度减 1
     size--;
     // 返回被删除的元素
@@ -133,11 +124,11 @@ public class ArrayList {
    *
    * @return 数组
    */
-  public int[] toArray() {
+  public Object[] toArray() {
     // 仅转换有效长度范围内的列表元素
-    int[] res = new int[size];
+    Object[] res = new Object[size];
     // 将有效长度范围内的元素复制到新数组中
-    System.arraycopy(arr, 0, res, 0, size);
+    System.arraycopy(elementData, 0, res, 0, size);
     return res;
   }
 
@@ -146,14 +137,19 @@ public class ArrayList {
    */
   private void extendCapacity() {
     // 新数组容量为原数组容量的 extendRatio 倍
-    int newCapacity = capacity * extendRatio;
+    int newCapacity = capacity * EXTEND_RATIO;
     // 创建一个长度为原数组 extendRatio 倍的新数组
-    int[] newArr = new int[newCapacity];
+    Object[] newArr = new Object[newCapacity];
     // 将原数组中的所有元素复制到新数组中
-    System.arraycopy(arr, 0, newArr, 0, size);
+    System.arraycopy(elementData, 0, newArr, 0, size);
     // 原数组引用指向新数组
-    arr = newArr;
+    elementData = newArr;
     // 新数组容量设置为原数组容量的 extendRatio 倍
     capacity = newCapacity;
+  }
+
+  @SuppressWarnings("unchecked")
+  E elementData(int index) {
+    return (E) elementData[index];
   }
 }
