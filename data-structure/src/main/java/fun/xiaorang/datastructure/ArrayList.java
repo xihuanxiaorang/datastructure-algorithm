@@ -45,7 +45,7 @@ public class ArrayList<E> {
    * @return 元素
    */
   public E get(int index) {
-    if (index < 0 || index >= size) {
+    if (index < 0 || index >= size()) {
       throw new IndexOutOfBoundsException("索引越界");
     }
     return elementData(index);
@@ -58,7 +58,7 @@ public class ArrayList<E> {
    * @param element 元素
    */
   public void set(int index, E element) {
-    if (index < 0 || index >= size) {
+    if (index < 0 || index >= size()) {
       throw new IndexOutOfBoundsException("索引越界");
     }
     elementData[index] = element;
@@ -71,7 +71,7 @@ public class ArrayList<E> {
    */
   public void add(E element) {
     // 元素数量超出容量时，触发扩容机制
-    if (size == capacity) {
+    if (size() == capacity) {
       extendCapacity();
     }
     elementData[size++] = element;
@@ -84,15 +84,15 @@ public class ArrayList<E> {
    * @param element 元素
    */
   public void insert(int index, E element) {
-    if (index < 0 || index > size) {
+    if (index < 0 || index > size()) {
       throw new IndexOutOfBoundsException("索引越界");
     }
     // 元素数量超出容量时，触发扩容机制
-    if (size == capacity) {
+    if (size() == capacity) {
       extendCapacity();
     }
     // 列表中的元素整体向后移动一位
-    System.arraycopy(elementData, index, elementData, index + 1, size - index);
+    System.arraycopy(elementData, index, elementData, index + 1, size() - index);
     // 插入新元素
     elementData[index] = element;
     // 列表长度加 1
@@ -106,13 +106,13 @@ public class ArrayList<E> {
    * @return 被删除的元素
    */
   public E remove(int index) {
-    if (index < 0 || index >= size) {
+    if (index < 0 || index >= size()) {
       throw new IndexOutOfBoundsException("索引越界");
     }
     // 记录被删除的元素
     E num = elementData(index);
     // 列表中的元素整体向前移动一位
-    System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+    System.arraycopy(elementData, index + 1, elementData, index, size() - index - 1);
     // 列表长度减 1
     size--;
     // 返回被删除的元素
@@ -126,9 +126,9 @@ public class ArrayList<E> {
    */
   public Object[] toArray() {
     // 仅转换有效长度范围内的列表元素
-    Object[] res = new Object[size];
+    Object[] res = new Object[size()];
     // 将有效长度范围内的元素复制到新数组中
-    System.arraycopy(elementData, 0, res, 0, size);
+    System.arraycopy(elementData, 0, res, 0, size());
     return res;
   }
 
@@ -141,7 +141,7 @@ public class ArrayList<E> {
     // 创建一个长度为原数组 extendRatio 倍的新数组
     Object[] newArr = new Object[newCapacity];
     // 将原数组中的所有元素复制到新数组中
-    System.arraycopy(elementData, 0, newArr, 0, size);
+    System.arraycopy(elementData, 0, newArr, 0, size());
     // 原数组引用指向新数组
     elementData = newArr;
     // 新数组容量设置为原数组容量的 extendRatio 倍

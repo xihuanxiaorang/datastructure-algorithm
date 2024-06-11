@@ -32,7 +32,7 @@ public class LinkedListStack<E> {
    * @return true 栈为空，false 栈不为空
    */
   public boolean isEmpty() {
-    return size == 0;
+    return size() == 0;
   }
 
   /**
@@ -85,11 +85,11 @@ public class LinkedListStack<E> {
    * @return 栈中的元素组成的数组
    */
   public Object[] toArray() {
-    ListNode<E> cur = top;
-    Object[] res = new Object[size];
-    for (int i = size - 1; i >= 0; i--) {
-      res[i] = cur.value;
-      cur = cur.next;
+    ListNode<E> curr = top;
+    Object[] res = new Object[size()];
+    for (int i = size() - 1; i >= 0; i--) {
+      res[i] = curr.value;
+      curr = curr.next;
     }
     return res;
   }
