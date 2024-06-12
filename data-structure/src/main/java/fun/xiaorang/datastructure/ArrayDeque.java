@@ -5,28 +5,28 @@ package fun.xiaorang.datastructure;
  * @description <p style = " font-weight:bold ; "><p/>
  * @github <a href="https://github.com/xihuanxiaorang/datastructure-algorithm">datastructure-algorithm</a>
  * @Copyright 博客：<a href="https://docs.xiaorang.fun">小让的糖果屋</a>  - show me the code
- * @date 2024/06/11 23:44
+ * @date 2024/06/12 15:15
  */
-public class ArrayQueue<E> {
+public class ArrayDeque<E> {
   /**
    * 用于存储队列元素的数组
    */
   private final Object[] elementData;
   /**
-   * 队头指针，指向队首元素
-   */
-  private int front;
-  /**
    * 队列的长度
    */
   private int size;
+  /**
+   * 队头指针，指向队首元素
+   */
+  private int front;
 
-  public ArrayQueue() {
+  public ArrayDeque() {
     this(10);
   }
 
-  public ArrayQueue(int capacity) {
-    elementData = new Object[capacity];
+  public ArrayDeque(int capacity) {
+    this.elementData = new Object[capacity];
     front = size = 0;
   }
 
@@ -58,37 +58,67 @@ public class ArrayQueue<E> {
   }
 
   /**
-   * 入队操作，将元素e添加到队列的尾部
+   * 队首入队操作
    *
    * @param e 入队元素
    */
-  public void push(E e) {
+  public void pushFirst(final E e) {
+    if (size() == capacity()) {
+      throw new IllegalStateException("队列已满");
+    }
+    // 队首指针向左移动一位
+    // 通过取余操作实现 front 越过数组头部后回到尾部
+    front = index(front - 1);
+    // 将元素添加至队首
+    elementData[front] = e;
+    // 队列长度加1
+    size++;
+  }
+
+  /**
+   * 队尾入队操作
+   *
+   * @param e 入队元素
+   */
+  public void pushLast(final E e) {
     if (size() == capacity()) {
       throw new IllegalStateException("队列已满");
     }
     // 计算队尾指针，指向队尾元素的下一个位置
     // 通过取余操作实现 rear 越过数组尾部后回到头部
-    int rear = (front + size) % capacity();
+    int rear = index(front + size);
     // 将元素添加至队尾
     elementData[rear] = e;
-    // 队列长度加 1
+    // 队列长度加1
     size++;
   }
 
   /**
-   * 出队操作，返回队首元素
+   * 队首出队操作
    *
    * @return 队首元素
    */
-  public E pop() {
+  public E popFirst() {
     // 获取队首元素
-    E top = peek();
-    // 队首指针向后移动一位，若越过尾部，则返回到数组头部
-    front = (front + 1) % capacity();
-    // 队列长度减 1
+    E e = peekFirst();
+    // 队首指针向右移动一位
+    front = index(front + 1);
+    // 队列长度减1
     size--;
-    // 返回队首元素
-    return top;
+    return e;
+  }
+
+  /**
+   * 队尾出队操作
+   *
+   * @return 队尾元素
+   */
+  public E popLast() {
+    // 获取队尾元素
+    E e = peekLast();
+    // 队列长度减1
+    size--;
+    return e;
   }
 
   /**
@@ -96,11 +126,25 @@ public class ArrayQueue<E> {
    *
    * @return 队首元素
    */
-  public E peek() {
+  public E peekFirst() {
     if (isEmpty()) {
       throw new IndexOutOfBoundsException();
     }
     return elementData(front);
+  }
+
+  /**
+   * 获取队尾元素
+   *
+   * @return 队尾元素
+   */
+  public E peekLast() {
+    if (isEmpty()) {
+      throw new IndexOutOfBoundsException();
+    }
+    // 计算尾元素索引
+    int last = index(front + size - 1);
+    return elementData(last);
   }
 
   /**
@@ -113,7 +157,7 @@ public class ArrayQueue<E> {
     Object[] res = new Object[size];
     // 将有效长度范围内的元素复制到新数组中
     for (int i = 0, j = front; i < size; i++, j++) {
-      res[i] = elementData(j % capacity());
+      res[i] = elementData(index(j));
     }
     return res;
   }
@@ -121,5 +165,12 @@ public class ArrayQueue<E> {
   @SuppressWarnings("unchecked")
   E elementData(int index) {
     return (E) elementData[index];
+  }
+
+  private int index(int index) {
+    // 通过取余操作实现数组首尾相连
+    // 当 index 越过数组尾部后，回到头部
+    // 当 index 越过数组头部后，回到尾部
+    return (index + capacity()) % capacity();
   }
 }
