@@ -104,7 +104,7 @@ public class LinkedListQueue<E> {
      */
     E value;
     /**
-     * 指向下一个节点的指针
+     * 后继节点
      */
     ListNode<E> next;
 
@@ -113,7 +113,7 @@ public class LinkedListQueue<E> {
      *
      * @param value 节点值
      */
-    public ListNode(E value) {
+    public ListNode(final E value) {
       this.value = value;
     }
   }
